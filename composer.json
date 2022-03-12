@@ -1,0 +1,29 @@
+﻿{
+  "name": "FreedomArt/bestchange-api",
+  "description": "API bestchange.ru library",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Artem Trotsenko",
+      "email": "freedomthedark@gmail.com"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^7.0",
+    "imangazaliev/didom": "^1.13",
+    "ext-zip": "*",
+    "ext-iconv": "*",
+    "ext-curl": "*",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "BestChangeApi\\": "src/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.2"
+  }
+}
