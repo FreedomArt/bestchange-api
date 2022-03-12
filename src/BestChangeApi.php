@@ -25,6 +25,10 @@ class BestChangeApi
     private $exchangers;
     private $rates;
 
+    private $dataExchangers = [];
+    private $dataCurrencies = [];
+    private $dataRates      = [];
+
     public function __construct($cachePath = '', $cacheTime = 3600)
     {
         $this->zip = new \ZipArchive();
@@ -59,7 +63,7 @@ class BestChangeApi
         foreach ($data as $row) {
             $row = iconv('CP1251', 'UTF-8', $row);
             $data = explode(';', $row);
-            $this->data[$data[0]] = [
+            $this->dataCurrencies[$data[0]] = [
                 'id' => (int)$data[0],
                 'name' => $data[2],
             ];
@@ -75,7 +79,7 @@ class BestChangeApi
         foreach ($data as $row) {
             $row  = iconv('CP1251', 'UTF-8', $row);
             $data = explode(';', $row);
-            $this->data[$data[0]] = $data[1];
+            $this->dataExchangers([$data[0]] = $data[1];
         }
         ksort($this->data);
     }
@@ -95,7 +99,7 @@ class BestChangeApi
                 continue;
             }
             $rate = $rateReceive ? $rateGive / $rateReceive : 0;
-            $this->data[$data[0]][$data[1]][$data[2]] = [
+            $this->dataRates[$data[0]][$data[1]][$data[2]] = [
                 'exchanger_id' => (int)$data[2],
                 'rate_give'    => $rateGive,
                 'rate_receive' => $rateReceive,
