@@ -10,10 +10,10 @@ class BestChangeApi
 {
     private $version = '1.1.0';
 
-    const API_URL = 'http://api.bestchange.ru/info.zip';
-
-    const TIMEOUT = 25;
-    const PREFIX_TMPFILE = 'art';
+    const API_URL         = 'http://api.bestchange.ru/info.zip';
+    const FILE_CURRENCIES = 'bm_cy.dat';
+    const TIMEOUT         = 25;
+    const PREFIX_TMPFILE  = 'art';
 
     private $cachePath;
     private $useCache;
@@ -42,7 +42,24 @@ class BestChangeApi
     private function initLoad()
     {
         $this->getFile()->unzip()->init();
+        $this->currencies = $this->getCurrencies($this->zip->getFromName(self::FILE_CURRENCIES));
         return $this;
+    }
+
+    private function getCurrencies(array $data)
+    {
+        $data = explode("\n", $data);
+        foreach ($data as $row) {
+            $row = iconv('CP1251', 'UTF-8', $row);
+            $data = explode(';', $row);
+            $this->data[$data[0]] = [
+                'id' => (int)$data[0],
+                'name' => $data[2],
+            ];
+        }
+        uasort($this->data, function ($a, $b) {
+            return strcasecmp($a['name'], $b['name']);
+        });
     }
 
     private function init()
