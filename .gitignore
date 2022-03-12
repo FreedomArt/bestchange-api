@@ -1,0 +1,6 @@
+/.bundle
+/vendor/bundle
+*.sublime-project
+*.sublime-workspace
+/tmp
+/cache
