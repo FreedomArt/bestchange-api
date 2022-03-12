@@ -54,7 +54,7 @@ class BestChangeApi
             fclose($fp);
             return $this;
         }
-        throw new BestChangeException('File on bestchange.ru not available!');
+        throw new BestChangeApiException('File on bestchange.ru not available!');
     }
 
 
