@@ -58,6 +58,11 @@ class BestChangeApi
         return $this;
     }
 
+    public function getByID($id)
+    {
+        return empty($this->currencies[$id]) ? false : $this->currencies[$id];
+    }
+
     public function getCurrencies()
     {
         return $this->currencies;
@@ -89,11 +94,13 @@ class BestChangeApi
                 'name' => $data[2],
             ];
         }
-        /*uasort($this->dataCurrencies, function ($a, $b) {
-            return strcasecmp($a['name'], $b['name']);
-        });*/
-        ksort($this->dataCurrencies);
-        return $this->dataCurrencies;
+        uasort($this->dataCurrencies, function ($a, $b) {
+            return strcmp(
+                mb_strtolower($a['name'], 'UTF-8'),
+                mb_strtolower($b['name'], 'UTF-8')
+            );
+        });
+        //return $this->dataCurrencies;
     }
 
     private function setExchangers($data)
