@@ -93,6 +93,7 @@ class BestChangeApi
             return strcasecmp($a['name'], $b['name']);
         });*/
         ksort($this->dataCurrencies);
+        return $this->dataCurrencies;
     }
 
     private function setExchangers($data)
@@ -104,6 +105,7 @@ class BestChangeApi
             $this->dataExchangers[$data[0]] = $data[1];
         }
         ksort($this->dataExchangers);
+        return $this->dataExchangers;
     }
 
     private function setRates($data)
@@ -129,6 +131,7 @@ class BestChangeApi
                 'reserve'      => $data[5],
             ];
         }
+        return $this->dataRates;
     }
 
     private function init()
