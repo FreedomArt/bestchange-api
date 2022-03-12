@@ -79,7 +79,7 @@ class BestChangeApi
         foreach ($data as $row) {
             $row  = iconv('CP1251', 'UTF-8', $row);
             $data = explode(';', $row);
-            $this->dataExchangers([$data[0]] = $data[1];
+            $this->dataExchangers[$data[0]] = $data[1];
         }
         ksort($this->data);
     }
