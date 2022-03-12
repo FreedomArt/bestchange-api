@@ -8,7 +8,8 @@ use ZipArchive;
 
 class BestChangeApi
 {
-    private $version = '1.1.0';
+    private $version = '';
+    private $lastUpdate;
 
     const API_URL         = 'http://api.bestchange.ru/info.zip';
     const FILE_CURRENCIES = 'bm_cy.dat';
@@ -70,6 +71,11 @@ class BestChangeApi
     public function getRates()
     {
         return $this->rates;
+    }
+
+    public function getLastUpdate()
+    {
+        return $this->lastUpdate;
     }
 
     private function setCurrencies($data)
@@ -134,6 +140,14 @@ class BestChangeApi
             if (count($data) < 2) {
                 continue;
             }
+            switch ($data[0]) {
+                case 'last_update':
+                    $this->lastUpdate = $this->getDate($data[1]);
+                break;
+                case 'current_version':
+                    $this->version = $data[1];
+                break;
+            }
         }
         return $this;
     }
@@ -169,6 +183,27 @@ class BestChangeApi
     }
 
 
+    private function getDate($date)
+    {
+        $arMonth = [
+            'января' => 'January',
+            'февраля' => 'February',
+            'марта' => 'March',
+            'апреля' => 'April',
+            'мая' => 'May',
+            'июня' => 'June',
+            'июля' => 'July',
+            'августа' => 'August',
+            'сентября' => 'September',
+            'октября' => 'October',
+            'ноября' => 'November',
+            'декабря' => 'December',
+        ];
+        foreach ($arMonth as $ru => $en) {
+            $date = preg_replace('/' . $ru . '/sui', $en, $date);
+        }
+        return new \DateTime($date);
+    }
 
     private function loadFile($url)
     {
