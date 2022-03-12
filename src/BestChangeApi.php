@@ -12,6 +12,8 @@ class BestChangeApi
 
     const API_URL         = 'http://api.bestchange.ru/info.zip';
     const FILE_CURRENCIES = 'bm_cy.dat';
+    const FILE_EXCHANGERS = 'bm_exch.dat';
+    const FILE_RATES      = 'bm_rates.dat';
     const TIMEOUT         = 25;
     const PREFIX_TMPFILE  = 'art';
 
@@ -19,6 +21,9 @@ class BestChangeApi
     private $useCache;
     private $cacheTime;
     private $zip;
+    private $currencies;
+    private $exchangers;
+    private $rates;
 
     public function __construct($cachePath = '', $cacheTime = 3600)
     {
@@ -43,10 +48,12 @@ class BestChangeApi
     {
         $this->getFile()->unzip()->init();
         $this->currencies = $this->getCurrencies($this->zip->getFromName(self::FILE_CURRENCIES));
+        $this->exchangers = $this->getExchangers($this->zip->getFromName(self::FILE_EXCHANGERS));
+        $this->rates      = $this->getRates($this->zip->getFromName(self::FILE_RATES));
         return $this;
     }
 
-    private function getCurrencies(array $data)
+    private function getCurrencies($data)
     {
         $data = explode("\n", $data);
         foreach ($data as $row) {
@@ -60,6 +67,42 @@ class BestChangeApi
         uasort($this->data, function ($a, $b) {
             return strcasecmp($a['name'], $b['name']);
         });
+    }
+
+    private function getExchangers($data)
+    {
+        $data = explode("\n", $data);
+        foreach ($data as $row) {
+            $row  = iconv('CP1251', 'UTF-8', $row);
+            $data = explode(';', $row);
+            $this->data[$data[0]] = $data[1];
+        }
+        ksort($this->data);
+    }
+
+    private function getRates($data)
+    {
+        $data = explode("\n", $data);
+        foreach ($data as $row) {
+            $row = iconv('CP1251', 'UTF-8', $row);
+            $data = explode(';', $row);
+            if (count($data) < 5) {
+                continue;
+            }
+            $rateGive    = (float)$data[3];
+            $rateReceive = (float)$data[4];
+            if (!$rateGive || !$rateReceive) {
+                continue;
+            }
+            $rate = $rateReceive ? $rateGive / $rateReceive : 0;
+            $this->data[$data[0]][$data[1]][$data[2]] = [
+                'exchanger_id' => (int)$data[2],
+                'rate_give'    => $rateGive,
+                'rate_receive' => $rateReceive,
+                'rate'         => $rate,
+                'reserve'      => $data[5],
+            ];
+        }
     }
 
     private function init()
