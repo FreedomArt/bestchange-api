@@ -58,9 +58,15 @@ class BestChangeApi
         return $this;
     }
 
-    public function getByID($id)
+    /**
+     * [getByID description]
+     * @param  [type] $id   [description]
+     * @param  string $type currencies  exchangers  rates
+     * @return [type]       [description]
+     */
+    public function getByID($id, $type = "currencies")
     {
-        return empty($this->currencies[$id]) ? false : $this->currencies[$id];
+        return empty($this->{$type[$id]}) ? false : $this->{$type[$id]};
     }
 
     public function getCurrencies()
