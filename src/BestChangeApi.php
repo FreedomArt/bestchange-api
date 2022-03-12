@@ -83,9 +83,10 @@ class BestChangeApi
                 'name' => $data[2],
             ];
         }
-        uasort($this->dataCurrencies, function ($a, $b) {
+        /*uasort($this->dataCurrencies, function ($a, $b) {
             return strcasecmp($a['name'], $b['name']);
-        });
+        });*/
+        ksort($this->dataCurrencies);
     }
 
     private function setExchangers($data)
