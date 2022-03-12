@@ -2,6 +2,7 @@
 
 namespace BestChangeApi;
 
+use BestChangeApi\Exception\BestChangeApiException;
 use DateTime;
 use ZipArchive;
 
