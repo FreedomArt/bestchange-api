@@ -3,6 +3,7 @@
   "description": "API bestchange.ru library",
   "type": "library",
   "license": "MIT",
+  "homepage": "https://github.com/FreedomArt/bestchange-api",
   "authors": [
     {
       "name": "Artem Trotsenko",
