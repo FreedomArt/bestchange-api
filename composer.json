@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "freedomart/bestchange-api",
   "description": "API bestchange.ru library",
   "type": "library",
@@ -27,5 +27,5 @@
   },
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "version": "1.0"
+  "version": "1.1.0"
 }
