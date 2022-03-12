@@ -66,7 +66,7 @@ class BestChangeApi
      */
     public function getByID($id, $type = "currencies")
     {
-        return empty($this->{$type[$id]}) ? false : $this->{$type[$id]};
+        return empty($this->{$type}[$id]) ? false : $this->{$type}[$id];
     }
 
     public function getCurrencies()
