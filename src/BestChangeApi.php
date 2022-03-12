@@ -12,7 +12,7 @@ class BestChangeApi
 
     const API_URL = 'http://api.bestchange.ru/info.zip';
 
-    const TIMEOUT = 5;
+    const TIMEOUT = 25;
     const PREFIX_TMPFILE = 'art';
 
     private $cachePath;
@@ -31,7 +31,7 @@ class BestChangeApi
             $this->useCache  = false;
             $this->cachePath = tempnam(sys_get_temp_dir(), self::PREFIX_TMPFILE);
         }
-        $this->init();
+        $this->initLoad();
     }
 
     public function getVersion()
@@ -39,14 +39,31 @@ class BestChangeApi
         return $this->version;
     }
 
-    private function init()
+    private function initLoad()
     {
         $this->getFile()->unzip()->init();
         return $this;
     }
 
+    private function init()
+    {
+        $file = explode("\n", $this->zip->getFromName('bm_info.dat'));
+        foreach ($file as $row) {
+            $row = iconv('CP1251', 'UTF-8', $row);
+            $data = array_map('trim', explode('=', $row));
+            if (count($data) < 2) {
+                continue;
+            }
+        }
+        return $this;
+    }
+
     private function getFile()
     {
+        if ($this->checkCacheFile()) {
+            return $this;
+        }
+
         $file = $this->loadFile(self::API_URL);
         if ($file) {
             $fp = fopen($this->cachePath, 'wb+');
@@ -55,6 +72,20 @@ class BestChangeApi
             return $this;
         }
         throw new BestChangeApiException('File on bestchange.ru not available!');
+    }
+
+    private function checkCacheFile()
+    {
+        clearstatcache(true, $this->cachePath);
+        return ( $this->useCache && file_exists($this->cachePath) && filemtime($this->cachePath) > (time() - $this->cacheTime) );
+    }
+
+    private function unzip()
+    {
+        if (!$this->zip->open($this->cachePath)) {
+            throw new BestChangeApiException('Incorrect file received from bestchange.ru!');
+        }
+        return $this;
     }
 
 
