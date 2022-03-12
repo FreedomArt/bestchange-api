@@ -59,17 +59,17 @@ class BestChangeApi
 
     public function getCurrencies()
     {
-        return $this->currencies->get();
+        return $this->currencies;
     }
 
     public function getExchangers()
     {
-        return $this->exchangers->get();
+        return $this->exchangers;
     }
 
     public function getRates()
     {
-        return $this->rates->get();
+        return $this->rates;
     }
 
     private function setCurrencies($data)
