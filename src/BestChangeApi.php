@@ -51,13 +51,28 @@ class BestChangeApi
     private function initLoad()
     {
         $this->getFile()->unzip()->init();
-        $this->currencies = $this->getCurrencies($this->zip->getFromName(self::FILE_CURRENCIES));
-        $this->exchangers = $this->getExchangers($this->zip->getFromName(self::FILE_EXCHANGERS));
-        $this->rates      = $this->getRates($this->zip->getFromName(self::FILE_RATES));
+        $this->currencies = $this->setCurrencies($this->zip->getFromName(self::FILE_CURRENCIES));
+        $this->exchangers = $this->setExchangers($this->zip->getFromName(self::FILE_EXCHANGERS));
+        $this->rates      = $this->setRates($this->zip->getFromName(self::FILE_RATES));
         return $this;
     }
 
-    private function getCurrencies($data)
+    public function getCurrencies()
+    {
+        return $this->currencies->get();
+    }
+
+    public function getExchangers()
+    {
+        return $this->exchangers->get();
+    }
+
+    public function getRates()
+    {
+        return $this->rates->get();
+    }
+
+    private function setCurrencies($data)
     {
         $data = explode("\n", $data);
         foreach ($data as $row) {
@@ -73,7 +88,7 @@ class BestChangeApi
         });
     }
 
-    private function getExchangers($data)
+    private function setExchangers($data)
     {
         $data = explode("\n", $data);
         foreach ($data as $row) {
@@ -84,7 +99,7 @@ class BestChangeApi
         ksort($this->data);
     }
 
-    private function getRates($data)
+    private function setRates($data)
     {
         $data = explode("\n", $data);
         foreach ($data as $row) {
